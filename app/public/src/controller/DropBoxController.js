@@ -9,7 +9,32 @@ class DropBoxController {
         this.namefileEl = this.snackModalEl.querySelector('.filename');
         this.timeleftEl = this.snackModalEl.querySelector('.timeleft');
 
+        this.connectFirebase();
         this.initEvents();
+
+    }
+
+    connectFirebase(){
+
+         // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyA_yz0nQJAbXcOVLS2-AgPt8taTlZJ_HT4",
+            authDomain: "dropbox-clone-c7566.firebaseapp.com",
+            databaseURL: "https://dropbox-clone-c7566-default-rtdb.firebaseio.com",
+            projectId: "dropbox-clone-c7566",
+            storageBucket: "dropbox-clone-c7566.firebasestorage.app",
+            messagingSenderId: "362353051039",
+            appId: "1:362353051039:web:30d1dc3273a7b22b2ae9aa",
+            measurementId: "G-P7Y8H6432F"
+          };
+        
+          // Initialize Firebase
+          const app = initializeApp(firebaseConfig);
+          const analytics = getAnalytics(app);
 
     }
 
