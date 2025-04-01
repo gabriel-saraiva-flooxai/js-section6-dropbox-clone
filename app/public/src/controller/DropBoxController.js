@@ -16,11 +16,7 @@ class DropBoxController {
 
     connectFirebase(){
 
-         // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-      
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        //For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
             apiKey: "AIzaSyA_yz0nQJAbXcOVLS2-AgPt8taTlZJ_HT4",
             authDomain: "dropbox-clone-c7566.firebaseapp.com",
@@ -33,8 +29,7 @@ class DropBoxController {
           };
         
           // Initialize Firebase
-          const app = initializeApp(firebaseConfig);
-          const analytics = getAnalytics(app);
+          firebase.initializeApp(firebaseConfig);
 
     }
 
@@ -48,13 +43,44 @@ class DropBoxController {
 
         this.inputFilesEl.addEventListener('change', event => {
 
-            this.uploadTask(event.target.files);
+            this.btnSendFileEl.disabled = true;
+
+            this.uploadTask(event.target.files).then(responses => {
+
+                responses.forEach(resp => {
+
+                    this.getFirebaseRef().push().set(resp.files['input-file']);
+                    
+                });
+
+                this.uploadComplete();
+
+            }).catch(err => {
+
+                this.uploadComplete();
+                console.error(err);
+
+            });
 
             this.modalShow();
 
-            this.inputFilesEl.value = '';
-
         });
+
+    }
+
+    uploadComplete(){
+
+        this.modalShow(false);
+
+        this.inputFilesEl.value = '';
+
+        this.btnSendFileEl.disabled = false;
+
+    }
+
+    getFirebaseRef(){
+
+        return firebase.database().ref('files');
 
     }
 
@@ -78,8 +104,6 @@ class DropBoxController {
 
                 ajax.onload = event => {
 
-                    this.modalShow(false);
-
                     try {
                         resolve(JSON.parse(ajax.responseText));
                     } catch (e) {
@@ -92,7 +116,6 @@ class DropBoxController {
 
                 ajax.onerror = event => {
 
-                    this.modalShow(false);
                     reject(event);
 
                 };
@@ -326,7 +349,7 @@ class DropBoxController {
 
     }
 
-    getFileView(file){
+    getFileView(file, key){
 
         return `
         <li>
